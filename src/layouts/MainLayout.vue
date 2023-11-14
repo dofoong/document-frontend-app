@@ -6,10 +6,12 @@
         :class="pageScroll ? 'dragNav' : 'normalNav'"
       >
         <div class="row items-center full-width" style="max-width: 1200px">
-          <q-toolbar-title> Blog </q-toolbar-title>
+          <q-toolbar-title class="cursor-pointer" @click="$router.push('/')">
+            Blog
+          </q-toolbar-title>
           <q-space></q-space>
           <div
-            class="q-mx-sm cursor-pointer"
+            class="q-mx-sm cursor-pointer xs-hide"
             v-for="(menu, mIdx) in essentialLinks"
             :key="mIdx"
             @click="menu.anchor ? openPage(menu.link) : $router.push(menu.link)"
@@ -22,7 +24,7 @@
             round
             icon="menu"
             aria-label="Menu"
-            class="cursor-pointer xl-hide lg-hide"
+            class="cursor-pointer xl-hide lg-hide md-hide sm-hide"
             @click="toggleLeftDrawer"
           />
         </div>
@@ -49,14 +51,14 @@ const essentialLinks: EssentialLinkProps[] = [
     title: 'Docs',
     caption: 'quasar.dev',
     icon: 'school',
-    link: 'https://quasar.dev',
+    link: 'Docs',
     anchor: false,
   },
   {
     title: 'Career',
     caption: 'forum.quasar.dev',
     icon: 'record_voice_over',
-    link: 'https://forum.quasar.dev',
+    link: 'Career',
     anchor: false,
   },
   {
