@@ -31,20 +31,31 @@
       </q-toolbar>
     </div>
 
-    <q-page-container>
-      <router-view />
-    </q-page-container>
+    <div class="row" ref="sideBarElement" @resize="handleResize">
+      <div style="width: calc((100% - 1200px) / 2)" v-show="useSideBar">
+        sideLeft
+      </div>
+      <div class="row items-center full-width" style="max-width: 1200px">
+        <q-page-container>
+          <router-view />
+        </q-page-container>
+      </div>
+      <div style="width: calc((100% - 1200px) / 2)" v-show="useSideBar">
+        sideRight
+      </div>
+    </div>
   </q-layout>
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue';
+import { computed, onBeforeUnmount, onMounted, ref, watch } from 'vue';
 import EssentialLink, {
   EssentialLinkProps,
 } from 'components/EssentialLink.vue';
 
 const pageScroll = ref(false);
 const scrollThrottle = ref(false);
+const useSideBar = ref(false);
 
 const essentialLinks: EssentialLinkProps[] = [
   {
@@ -95,8 +106,39 @@ function openPage(href: string) {
   window.open(href, '_blank');
 }
 
+const sideBarElement = ref(null);
+
+const addResizeListener = () => {
+  window.addEventListener('resize', handleResize);
+};
+
+const removeResizeListener = () => {
+  window.removeEventListener('resize', handleResize);
+};
+
+// 컴포넌트가 마운트된 후에 이벤트 리스너 등록
+onMounted(() => {
+  addResizeListener();
+});
+
+// 컴포넌트가 언마운트되기 전에 이벤트 리스너 제거
+onBeforeUnmount(() => {
+  removeResizeListener();
+});
+
+// 크기 변경 이벤트 핸들러
+const handleResize = () => {
+  const targetElement = Number(sideBarElement.value.clientWidth);
+  if (targetElement > 1400) {
+    useSideBar.value = true;
+  } else {
+    useSideBar.value = false;
+  }
+};
+
 onMounted(() => {
   document.addEventListener('scroll', genDragHeight);
+  handleResize();
 });
 </script>
 <style lang="scss" scoped>
